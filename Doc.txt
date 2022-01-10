@@ -1,0 +1,22 @@
+So far, I have created a cloud simulation with 2 data centers, 1 host each, and some vms and cloudlets assigned to the broker and hosts which can all be altered via the configure file. Here are some of my findings:
+Double the cloudlets => double the time
+When too much storage per vm, and not enough in hosts, causes overloading and ends up going to different data-centers vm
+This can help cause broadcasting storm
+Once the ram and bandwith get over, the cloudlet is left delayed indefinitely and is delayed from processing for large amounts of time
+Ram usage by the vm of the host does not affect run time unless it gets overloaded
+The higher the MIPS of the vm, the faster the execution of the cloudlets
+When all cores from a Host fails, clones of the effected vms are made into new hosts which serve as snapshots of the old vm
+Space shared divides the task equally based on space. It considers only one cloudlet per VM, while 
+the others are in a waiting list which can be noticed as the start time is different for every vn numbered of cloudlets. 
+Time shared does not prioritize any cloudlet and considers the MIPS of every cloudlet to be shared exactly equally and hence, lets the processing occur divided equally on time
+CompletelyFair execution is based on a time shared scheduler that waits for the time slices of certain cloudlets to allow other ones to execute
+This can be witnessed as in small executions, the other cloudlets aren't even used/spawned in the first place
+Switching UtilizationFull to UtilizationDynamic is necessary for resources like RAM and Bw as they are shared among many cloudlets
+and if Full is used, while one cloudlet takes the entire ram and bandwidth, the others just sit there waiting for it to finish
+I can simulate a broadcast storm by creating multiple cloudlets and using utilizationFull for the Ram and Bandwith so that the cloudlets overload the server with messages of requesting more Ram or bandwith. This occurs under VmAllocationSimple, and a time shared policy and you would get an overloaded result would have certain cloudlets that have taken huge exponential times that have barely done any work.
+Certain policies can fix this, like making it space shared, making the utilization dynamic and having certain factors for 
+I use the CPU Utilization of the Vm Listener and my utilization policies for it to test out the different efficiencies of the different policies which has given me the observation of how much better the spaceShared is over the TimeShared and CompletelyFair in terms of how long it takes and in cases of high overload
+I use the createFaultInjectionForHosts method for creating faults and simulating real life failures as well as a cloning method to replace the destroyed vms in cases where the needed vms of a certain host are destroyed
+I bind the cloudlets to different vms to help increase efficiency and it also helps me study how the VmAllocation policies affect the runtime and properties of the cloud simulation
+I used the Network DataCenter to intialize costs for memory, bandwith and other things to study how they change with different policies and under different circumstances.
+I randomize the utilization of resources of the cloudlets to give a more real life esque cloudlet behavior which has helped me study how the cloudlet scheduler affects the cloud as well as the scheduling interval of the data center itself
